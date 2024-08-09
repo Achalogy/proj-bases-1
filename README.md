@@ -1,7 +1,7 @@
 # Proyecto Bases
 
 - Miguel Francisco Vargas Contreras
-- Nicolas
+- Nicolas Diaz Granados Cano
 - Sara Rodriguez Urueña
 
 ## Documentación
