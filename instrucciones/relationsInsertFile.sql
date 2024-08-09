@@ -89,8 +89,6 @@ INSERT INTO colaborador (nombre, tipodocumento, numerodocumento, vinculacion, co
 INSERT INTO colaborador (nombre, tipodocumento, numerodocumento, vinculacion, comision) VALUES ('Roberto García', 'CC', 12345679, 'TEMPORAL', 34);
 
 -- meta
-INSERT INTO meta (fechameta, valormeta, valorreal, idCafeteria, idColaborador) VALUES (20230626, 10000, 9500, 1, 1);
-INSERT INTO meta (fechameta, valormeta, valorreal, idCafeteria, idColaborador) VALUES (20220626, 12000, 11500, 2, 2);
 INSERT INTO meta (fechameta, valormeta, valorreal, idCafeteria, idColaborador) VALUES (20210321, 9000, 8800, 3, 3);
 INSERT INTO meta (fechameta, valormeta, valorreal, idCafeteria, idColaborador) VALUES (20210422, 11000, 10500, 4, 4);
 INSERT INTO meta (fechameta, valormeta, valorreal, idCafeteria, idColaborador) VALUES (20220416, 13000, 12000, 5, 5);
@@ -114,8 +112,6 @@ INSERT INTO meta (fechameta, valormeta, valorreal, idCafeteria, idColaborador) V
 INSERT INTO meta (fechameta, valormeta, valorreal, idCafeteria, idColaborador) VALUES (20230126, 21500, 21000, 13, 3);
 INSERT INTO meta (fechameta, valormeta, valorreal, idCafeteria, idColaborador) VALUES (20220111, 22500, 22000, 14, 4);
 INSERT INTO meta (fechameta, valormeta, valorreal, idCafeteria, idColaborador) VALUES (20210416, 23500, 23000, 15, 5);
-INSERT INTO meta (fechameta, valormeta, valorreal, idCafeteria, idColaborador) VALUES (20230309, 12000, 11500, 1, 1);
-INSERT INTO meta (fechameta, valormeta, valorreal, idCafeteria, idColaborador) VALUES (20220222, 13000, 12500, 2, 2);
 INSERT INTO meta (fechameta, valormeta, valorreal, idCafeteria, idColaborador) VALUES (20220206, 11000, 10500, 3, 3);
 INSERT INTO meta (fechameta, valormeta, valorreal, idCafeteria, idColaborador) VALUES (20230313, 14000, 13000, 4, 4);
 INSERT INTO meta (fechameta, valormeta, valorreal, idCafeteria, idColaborador) VALUES (20230425, 12500, 12000, 5, 5);
