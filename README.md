@@ -158,6 +158,11 @@ ORDER BY  meta.fechameta,
 
 > Cuales son las ventas totales de cada cafetería?, liste el nombre de la cafetería, total de ventas. Las cafeterías que no tienen ventas deben aparecer en el listado.
 
+Para cambiar el valor `NULL` de las cafeterías sin ventas a `0`, utilizamos la función `COALESCE(SUM(meta.valormeta), 0)`. Esta función calcula la suma de ventas y reemplaza los valores `NULL` por `0`.
+
+Además, empleamos un `LEFT JOIN` (⋈) para combinar los datos de ventas (de la tabla `meta`) con cada cafetería, uniendo las tablas mediante `cafeteria.id = meta.idcafeteria`.
+
+
 ```sql
 SELECT  cafeteria.nombre, 
         COALESCE(SUM(meta.valormeta), 0) AS ventas
