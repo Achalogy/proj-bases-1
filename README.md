@@ -108,8 +108,29 @@ create table meta (
 
 Se utiliza la estructura `INSERT INTO tabla (nombre_datos...) VALUES (datos...)` porque el `id` se genera automáticamente por la base de datos. Por lo tanto, es necesario especificar los datos y el orden en que se van a insertar.
 
-La inserción de los datos para la tabla `edificio` se realizó manualmente. Posteriormente, se utilizó [ChatGPT](https://chat.openai.com) para generar las inserciones para las tablas `piso`, `cafetería`, `meta` y `colaborador`. Esta última tabla requirió un [script](https://github.com/Achalogy/proj-bases-1/blob/main/utils/main.ts) en `TypeScript` para generar fechas aleatorias. 
+La inserción de los datos para la tabla `edificio` se realizó manualmente. Posteriormente, se utilizó [ChatGPT](https://chat.openai.com) para generar las inserciones para las tablas `piso`, `cafetería`, `meta` y `colaborador`. Esta última tabla requirió un [script](https://github.com/Achalogy/proj-bases-1/blob/main/utils/main.ts) en `TypeScript` para generar fechas aleatorias.
 
 Estas instrucciones se guardan en el archivo `relationsInsertFile.sql`, que comienza eliminando todos los datos de cada tabla.
 
 ### Desarrollo de ejercicios
+
+#### VISTA_1
+
+> Listado de colaboradores, cafeterías y metas. Liste la cafetería, nombre del edificio, número del piso, nombre del colaborador, número y tipo de documento, fecha de meta, valor de las metas de ventas y valor real de ventas, diferencia porcentual entre meta y valor real. Ordene por fecha de meta, nombre de cafetería nombre de colaborador.
+
+Se uso la definición de variación porcentual tomada de internet: _Se calcula restando el valor antiguo del nuevo y luego, se divide el valor obtenido sobre el valor absoluto antiguo y se multiplica por 100._
+
+```sql
+((meta.valormeta - meta.valorreal)/meta.valorreal) * 100 as variacionporcentual
+```
+
+Ya con esta formula tenemos todos los datos necesarios para la query.
+
+```sql
+SELECT cafeteria.nombre, edificio.nombre, piso.numeropiso, colaborador.nombre, colaborador.tipodocumento, colaborador.numerodocumento, meta.fechameta, meta.valormeta, meta.valorreal, ((meta.valormeta - meta.valorreal)/meta.valorreal) * 100 as variacionporcentual
+  FROM (cafeteria, meta, colaborador, edificio, piso)
+  WHERE cafeteria.id=meta.idCafeteria
+    AND colaborador.id=meta.idColaborador
+    AND cafeteria.idPiso=piso.id
+    AND piso.idEdificio=edificio.id;
+```
