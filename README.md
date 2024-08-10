@@ -165,7 +165,7 @@ Además, empleamos un `LEFT JOIN` (⋈) para combinar los datos de ventas (de la
 
 ```sql
 SELECT  cafeteria.nombre, 
-        COALESCE(SUM(meta.valormeta), 0) AS ventas
+        COALESCE(SUM(meta.valorreal), 0) AS ventas
   
 FROM cafeteria
 
@@ -181,9 +181,9 @@ GROUP BY  cafeteria.id;
 ```sql
 WITH pagos AS (
   SELECT colaborador.nombre, ROUND(fechameta/100) as anho_mes,
-        COALESCE(SUM(meta.valormeta),0) AS ventas,
+        COALESCE(SUM(meta.valorreal),0) AS ventas,
         colaborador.comision,
-        COALESCE(ROUND(SUM(meta.valormeta) * ( colaborador.comision / 100 )), 0) AS pago
+        COALESCE(ROUND(SUM(meta.valorreal) * ( colaborador.comision / 100 )), 0) AS pago
   FROM meta
 
   LEFT JOIN colaborador ON colaborador.id = meta.idColaborador
@@ -203,3 +203,17 @@ UNION ALL
 
 SELECT nombre, anho_mes, ventas, comision, SUM(pago) as pago from total;
 ```
+
+#### VISTA_4
+
+> Cuál es el valor de las metas y ventas reales por cada año y mes? Liste año, mes y suma total de las metas, suma total de valores reales y suma total de la diferencia entre el valor real y la meta en ese año – mes.
+
+#### VISTA_5
+
+> Cuál es el porcentaje de participación de cada colaborador en el total general? El porcentaje de participación se calcula como la suma total de ventas reales de cada colaborador sobre la suma total de metas en todas las cafeterías. Liste el nombre del colaborador, total de ventas reales y el porcentaje de participación sobre las ventas reales de los colaboradores. 
+
+#### VISTA_6
+
+> Qué colaborador tiene metas en todas las cafeterías? Liste el nombre del colaborador. 
+
+#### VISTA_7

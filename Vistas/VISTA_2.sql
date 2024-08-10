@@ -1,5 +1,5 @@
 SELECT  cafeteria.nombre, 
-        COALESCE(SUM(meta.valormeta), 0) AS ventas
+        COALESCE(SUM(meta.valorreal), 0) AS ventas
   
 FROM cafeteria
 

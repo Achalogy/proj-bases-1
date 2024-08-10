@@ -1,8 +1,8 @@
 WITH pagos AS (
   SELECT colaborador.nombre, ROUND(fechameta/100) as anho_mes,
-        COALESCE(SUM(meta.valormeta),0) AS ventas,
+        COALESCE(SUM(meta.valorreal),0) AS ventas,
         colaborador.comision,
-        COALESCE(ROUND(SUM(meta.valormeta) * ( colaborador.comision / 100 )), 0) AS pago
+        COALESCE(ROUND(SUM(meta.valorreal) * ( colaborador.comision / 100 )), 0) AS pago
   FROM meta
 
   LEFT JOIN colaborador ON colaborador.id = meta.idColaborador
