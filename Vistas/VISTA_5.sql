@@ -1,4 +1,4 @@
-WITH pagos AS (
+WITH ventasColaborador AS (
   SELECT colaborador.nombre,
         COALESCE(SUM(meta.valorreal),0) AS ventas,
         COALESCE(COUNT(meta.valorreal),0) AS cantidadVentas
@@ -18,4 +18,4 @@ SELECT  nombre,
         cantidadVentas, 
         ventas, 
         (ventas * 100 / total) as porcentajeParticipacion 
-FROM pagos, total;
+FROM ventasColaborador, total;

@@ -1,4 +1,4 @@
-WITH pagos AS (
+WITH ventas AS (
   SELECT  ROUND(fechameta/100) AS anho_mes,
           COALESCE(SUM(meta.valormeta),0) AS metas,
           COALESCE(SUM(meta.valorreal),0) AS reales
@@ -10,4 +10,4 @@ WITH pagos AS (
   ORDER BY anho_mes
 ) 
 SELECT *, (metas - reales) AS diferencia 
-FROM pagos;
+FROM ventas;

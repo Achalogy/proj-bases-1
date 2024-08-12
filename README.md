@@ -178,6 +178,14 @@ GROUP BY  cafeteria.id;
 
 > Cuál es el valor por pagar a cada colaborador en cada mes y año? Liste el nombre del colaborador, el valor a pagar (total de ventas multiplicado por la comisión del colaborador). En una última fila muestre el total general de todos los colaboradores. 
 
+Conseguimos el valor `anho_mes` eliminando el valor del día en la tupla de la fecha. Para ello, dividimos en 100 y descartamos los decimales usando `ROUND()`. Luego, aplicamos la fórmula para calcular el monto a pagar al colaborador y utilizamos nuevamente `COALESCE` para evitar valores nulos.
+
+Guardamos esta primera consulta con el nombre de `pagos`. Esta tabla contendrá información del colaborador, como el nombre, su comisión, las ventas y el pago a realizar, además de la fecha en formato _añomes_.
+
+A continuación, crearemos la tabla `total`, que solo tendrá una fila con el nombre `"TOTAL"`. Mantendremos el valor del pago y cambiamos todos los demás valores por `NULL`.
+
+Finalmente, uniremos la tabla `pagos` con la tabla generada y realizaremos un `SUM(pago)` para encontrar el total de los pagos de todos los colaboradores.
+
 ```sql
 WITH pagos AS (
   SELECT colaborador.nombre, ROUND(fechameta/100) as anho_mes,
@@ -208,12 +216,91 @@ SELECT nombre, anho_mes, ventas, comision, SUM(pago) as pago from total;
 
 > Cuál es el valor de las metas y ventas reales por cada año y mes? Liste año, mes y suma total de las metas, suma total de valores reales y suma total de la diferencia entre el valor real y la meta en ese año – mes.
 
+Usaremos nuevamente `ROUND()` para calcular el _añomes_, haremos la suma, y utilizaremos `COALESCE()` para evitar valores `NULL`. Agruparemos los resultados por `anho_mes` y los organizaremos. A esta tabla le llamaremos `ventas`.
+
+Sobre esta tabla, agregaremos una nueva fila que contenga la diferencia entre el valor real y la meta.
+
+```sql
+WITH ventas AS (
+  SELECT  ROUND(fechameta/100) AS anho_mes,
+          COALESCE(SUM(meta.valormeta),0) AS metas,
+          COALESCE(SUM(meta.valorreal),0) AS reales
+
+  FROM meta
+
+  GROUP BY anho_mes
+
+  ORDER BY anho_mes
+) 
+SELECT *, (metas - reales) AS diferencia 
+FROM ventas;
+```
+
 #### VISTA_5
 
 > Cuál es el porcentaje de participación de cada colaborador en el total general? El porcentaje de participación se calcula como la suma total de ventas reales de cada colaborador sobre la suma total de metas en todas las cafeterías. Liste el nombre del colaborador, total de ventas reales y el porcentaje de participación sobre las ventas reales de los colaboradores. 
 
+Crearemos una tabla llamada `ventasColaborador` donde se almacenarán la suma de las ventas, la cantidad de ventas de los colaboradores y su nombre. Con esta tabla, crearemos otra que contendrá una única fila con el total de ventas de todos los colaboradores.
+
+Luego, cruzaremos estas tablas de tal manera que cada colaborador tenga una fila con el total de ventas de todos los colaboradores. Utilizaremos esta información para aplicar la fórmula `(ventas * 100 / total)`, que nos dará el porcentaje de participación en las ventas.
+
+
+```sql
+WITH ventasColaborador AS (
+  SELECT colaborador.nombre,
+        COALESCE(SUM(meta.valorreal),0) AS ventas,
+        COALESCE(COUNT(meta.valorreal),0) AS cantidadVentas
+  FROM meta
+
+  LEFT JOIN colaborador ON colaborador.id = meta.idColaborador
+
+  GROUP BY colaborador.nombre
+
+  ORDER BY colaborador.nombre
+),
+total as (
+  SELECT SUM(meta.valorreal) as total 
+  FROM meta
+) 
+SELECT  nombre, 
+        cantidadVentas, 
+        ventas, 
+        (ventas * 100 / total) as porcentajeParticipacion 
+FROM ventasColaborador, total;
+```
+
 #### VISTA_6
 
-> Qué colaborador tiene metas en todas las cafeterías? Liste el nombre del colaborador. 
+> Qué colaborador tiene metas en todas las cafeterías? Liste el nombre del colaborador.
+
+Con todas las metas, proyectaremos solo el nombre del colaborador y el ID de la cafetería en la que realizó cada venta. Seleccionaremos solo los valores distintos, lo que nos dará una tabla que indicará en qué cafeterías vendió cada empleado. A esta relación la llamaremos `colabCafeterias`.
+
+Luego, crearemos una relación llamada `cantCafeterias` que contendrá únicamente la cantidad total de cafeterías.
+
+A continuación, crearemos una relación llamada `filtro`, en la cual aplicaremos `COUNT()` sobre el ID de cafeterías para contar en cuántas cafeterías vendió cada ID de colaborador.
+
+Finalmente, cruzaremos estas dos tablas para filtrar los colaboradores que hayan vendido en el mismo número de cafeterías diferentes que la cantidad total de cafeterías.
+
+
+```sql
+WITH colabCafeterias AS (
+  SELECT DISTINCT nombre, 
+                  idCafeteria 
+  FROM colaborador
+  LEFT JOIN meta ON meta.idColaborador=colaborador.id
+),
+cantCafeterias AS (
+  SELECT COUNT(id) as cantidad
+  FROM cafeteria
+),
+filtro AS (
+  SELECT nombre, COUNT(idCafeteria) AS cafeteriasColaborador, cantidad
+  FROM colabCafeterias, cantCafeterias
+  GROUP BY nombre
+) 
+SELECT nombre as colaboradorEnTodasLasCafeterias
+FROM filtro
+WHERE cafeteriasColaborador=cantidad;
+```
 
 #### VISTA_7
