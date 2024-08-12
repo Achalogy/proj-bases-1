@@ -307,6 +307,12 @@ WHERE cafeteriasColaborador=cantidad;
 
 ![alt text](images/ENUN_VIEW_7.png)
 
+Se realiza un `SELECT DISTINCT` de todas las tablas de la base de datos para relacionar cada trabajador con los edificios en los que ha realizado una venta. Este proceso consiste en revisar las ventas de cada trabajador, recorrer toda la base de datos para identificar el nombre del edificio y seleccionar los valores distintos.
+
+Con esta tabla, se crean dos relaciones diferentes, donde se almacena el nombre del trabajador, su vinculación y el ID del edificio. Las tablas se filtran buscando aquellos registros correspondientes a "PLANTA" y "TEMPORAL", respectivamente. Luego, se cuenta la cantidad de trabajadores, agrupándolos por edificio. Esto da lugar a dos tablas: una con los trabajadores de planta en cada edificio y otra con los trabajadores temporales en cada edificio.
+
+Finalmente, estas dos tablas se unen en base al ID del edificio, se seleccionan los valores especificados en el enunciado del ejercicio y se añade una columna que muestra el total de trabajadores en cada edificio.
+
 ```sql
 WITH trabajadoresEdifio as (
   SELECT DISTINCT colaborador.id as colabId, meta.idCafeteria, colaborador.vinculacion, edificio.nombre, edificio.id as edificioId
