@@ -34,7 +34,8 @@ create table colaborador (
   numerodocumento INTEGER,
   vinculacion     VARCHAR(255) 
 		check (vinculacion in ('PLANTA', 'TEMPORAL')),
-  comision        INTEGER,
+  comision        INTEGER DEFAULT 10
+    check (comision >= 0 AND comision <= 100),
 
   primary key (id)
 );
@@ -42,8 +43,8 @@ create table colaborador (
 create table meta (
   id            INTEGER AUTO_INCREMENT,
   fechameta     INTEGER,
-  valormeta     INTEGER,
-  valorreal     INTEGER,
+  valormeta     INTEGER DEFAULT 0,
+  valorreal     INTEGER DEFAULT 0,
   idCafeteria   INTEGER,
   idColaborador INTEGER,
 
