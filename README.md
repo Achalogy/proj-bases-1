@@ -51,7 +51,7 @@ create table piso (
 
   primary key (id),
   foreign key (idEdificio) references edificio (id)
-    on delete cascade
+    on delete set null
 );
 ```
 
@@ -65,7 +65,7 @@ create table cafeteria (
 
   primary key (id),
   foreign key (idPiso) references piso (id)
-    on delete cascade
+    on delete set null
 );
 ```
 
@@ -98,9 +98,9 @@ create table meta (
 
   primary key (id),
   foreign key (idCafeteria) references cafeteria (id)
-    on delete cascade,
+    on delete set null,
   foreign key (idColaborador) references colaborador (id)
-    on delete cascade
+    on delete set null
 );
 ```
 
