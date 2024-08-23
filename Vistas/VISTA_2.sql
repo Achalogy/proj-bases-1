@@ -1,3 +1,5 @@
+DROP VIEW VISTA_2;
+CREATE VIEW VISTA_2 AS
 SELECT  cafeteria.id, cafeteria.nombre, 
         COALESCE(SUM(meta.valormeta), 0) AS ventas
 FROM cafeteria, meta

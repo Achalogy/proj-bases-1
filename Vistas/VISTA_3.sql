@@ -1,3 +1,5 @@
+DROP VIEW VISTA_3;
+CREATE VIEW VISTA_3 AS
 WITH pagos AS (
     SELECT  nombre,
             anhoMes, 

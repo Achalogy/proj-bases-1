@@ -1,3 +1,5 @@
+DROP VIEW VISTA_5;
+CREATE VIEW VISTA_5 AS
 SELECT  nombre, 
         total, 
         sum(valorreal) as ventas, 

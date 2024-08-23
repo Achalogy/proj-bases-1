@@ -130,8 +130,8 @@ Se uso la definición de variación porcentual tomada de internet: _Se calcula r
 Ya con esta formula tenemos todos los datos necesarios para la query.
 
 ```sql
-SELECT  cafeteria.nombre, 
-        edificio.nombre, 
+SELECT  cafeteria.nombre AS nombreCafeteria, 
+        edificio.nombre AS nombreEdificio, 
         piso.numeropiso, 
         colaborador.nombre, 
         colaborador.tipodocumento, 

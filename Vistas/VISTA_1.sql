@@ -1,5 +1,7 @@
-SELECT  cafeteria.nombre, 
-        edificio.nombre, 
+DROP VIEW VISTA_1;
+CREATE VIEW VISTA_1 AS
+SELECT  cafeteria.nombre AS nombreCafeteria, 
+        edificio.nombre AS nombreEdificio, 
         piso.numeropiso, 
         colaborador.nombre, 
         colaborador.tipodocumento, 
