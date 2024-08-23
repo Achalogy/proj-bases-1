@@ -1,5 +1,7 @@
 # Proyecto Bases
 
+Archivo `.sql` final: [query.sql](https://github.com/Achalogy/proj-bases-1/blob/main/query.sql)
+
 - Miguel Francisco Vargas Contreras
 - Nicolas Diaz Granados Cano
 - Sara Rodriguez Urueña
