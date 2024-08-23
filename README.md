@@ -157,6 +157,8 @@ ORDER BY  meta.fechameta,
           colaborador.nombre;
 ```
 
+![](images/imagev1.png)
+
 #### VISTA_2
 
 > Cuales son las ventas totales de cada cafetería?, liste el nombre de la cafetería, total de ventas. Las cafeterías que no tienen ventas deben aparecer en el listado.
@@ -174,6 +176,7 @@ WHERE cafeteria.id = meta.idcafeteria
 GROUP BY cafeteria.id, cafeteria.nombre
 ORDER BY cafeteria.id;
 ``` 
+![](images/imagev2.png)
 
 #### VISTA_3
 
@@ -221,6 +224,8 @@ FROM (
 );
 ```
 
+![](images/imagev3.png)
+
 #### VISTA_4
 
 > Cuál es el valor de las metas y ventas reales por cada año y mes? Liste año, mes y suma total de las metas, suma total de valores reales y suma total de la diferencia entre el valor real y la meta en ese año – mes.
@@ -242,6 +247,8 @@ GROUP BY anhoMes
 ORDER BY anhoMes;
 ```
 
+![](images/imagev4.png)
+
 #### VISTA_5
 
 > Cuál es el porcentaje de participación de cada colaborador en el total general? El porcentaje de participación se calcula como la suma total de ventas reales de cada colaborador sobre la suma total de metas en todas las cafeterías. Liste el nombre del colaborador, total de ventas reales y el porcentaje de participación sobre las ventas reales de los colaboradores. 
@@ -260,6 +267,8 @@ FROM colaborador, meta, (
 WHERE idColaborador = colaborador.id
 GROUP BY nombre, total;
 ```
+
+![](images/imagev5.png)
 
 #### VISTA_6
 
@@ -291,50 +300,11 @@ FROM (
 WHERE trabajaen=ccafeterias;
 ```
 
+![](images/imagev6.png)
+
 #### VISTA_7
 
 ![alt text](images/ENUN_VIEW_7.png)
 
-Se realiza un `SELECT DISTINCT` de todas las tablas de la base de datos para relacionar cada trabajador con los edificios en los que ha realizado una venta. Este proceso consiste en revisar las ventas de cada trabajador, recorrer toda la base de datos para identificar el nombre del edificio y seleccionar los valores distintos.
 
-Con esta tabla, se crean dos relaciones diferentes, donde se almacena el nombre del trabajador, su vinculación y el ID del edificio. Las tablas se filtran buscando aquellos registros correspondientes a `'PLANTA'` y `'TEMPORAL'`, respectivamente. Luego, se cuenta la cantidad de trabajadores, agrupándolos por edificio. Esto da lugar a dos tablas: una con los trabajadores de planta en cada edificio y otra con los trabajadores temporales en cada edificio.
-
-Finalmente, estas dos tablas se unen en base al ID del edificio, se seleccionan los valores especificados en el enunciado del ejercicio y se añade una columna que muestra el total de trabajadores en cada edificio.
-
-```sql
-WITH trabajadoresEdifio as (
-  SELECT DISTINCT colaborador.id as colabId, meta.idCafeteria, colaborador.vinculacion, edificio.nombre, edificio.id as edificioId
-  FROM  meta, 
-        colaborador,
-        cafeteria,
-        piso,
-        edificio
-  WHERE meta.idColaborador=colaborador.id
-        AND meta.idCafeteria = cafeteria.id
-        AND cafeteria.idPiso = piso.id
-        AND piso.idEdificio = edificio.id
-),
-trabajadoresPlanta AS (
-  SELECT  nombre, 
-          COUNT(vinculacion) as cantidadPlanta,
-          edificioId
-  FROM trabajadoresEdifio
-  WHERE vinculacion='PLANTA'
-  GROUP BY nombre, edificioId
-),
-trabajadoresTemporales AS (
-  SELECT  nombre, 
-          COUNT(vinculacion) as cantidadTemporal,
-          edificioId
-  FROM trabajadoresEdifio
-  WHERE vinculacion='TEMPORAL'
-  GROUP BY nombre, edificioId
-) 
-SELECT  trabajadoresPlanta.nombre, 
-        cantidadPlanta, 
-        cantidadTemporal, 
-        cantidadPlanta + cantidadTemporal AS total
-FROM  trabajadoresPlanta,
-      trabajadoresTemporales
-WHERE trabajadoresPlanta.edificioId=trabajadoresTemporales.edificioId;
-```
+![](images/imagev7.png)
