@@ -1,23 +1,33 @@
 WITH pagos AS (
-  SELECT colaborador.nombre, ROUND(fechameta/100) as anho_mes,
-        COALESCE(SUM(meta.valorreal),0) AS ventas,
-        colaborador.comision,
-        COALESCE(ROUND(SUM(meta.valorreal) * ( colaborador.comision / 100 )), 0) AS pago
-  FROM meta
-
-  LEFT JOIN colaborador ON colaborador.id = meta.idColaborador
-
-  GROUP BY anho_mes
-
-  ORDER BY colaborador.nombre
-),
-
-total AS (
-  SELECT "TOTAL" as nombre, null as anho_mes, null as ventas, null as comision, pago from pagos
+    SELECT  nombre,
+            anhoMes, 
+            sum(valormeta) AS ventas,
+            comision,
+            ROUND(SUM(valormeta) * ( comision / 100 )) AS pago
+    FROM colaborador, (
+            SELECT  idcolaborador, 
+                    ROUND(fechameta/100) as anhoMes, 
+                    valormeta
+            FROM meta
+    ) m
+    WHERE colaborador.id = idcolaborador
+    GROUP BY anhoMes, nombre, comision
+    ORDER BY nombre, comision
 )
 
 SELECT * FROM pagos
 
 UNION ALL
 
-SELECT nombre, anho_mes, ventas, comision, SUM(pago) as pago from total;
+SELECT  nombre, 
+        anho_mes, 
+        ventas, 
+        comision, 
+        SUM(pago) as pago 
+FROM (
+    SELECT  'TOTAL' as nombre, 
+            null as anho_mes, 
+            null as ventas, 
+            null as comision, 
+            pago from pagos
+);

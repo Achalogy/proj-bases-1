@@ -1,13 +1,12 @@
-WITH ventas AS (
-  SELECT  ROUND(fechameta/100) AS anho_mes,
-          COALESCE(SUM(meta.valormeta),0) AS metas,
-          COALESCE(SUM(meta.valorreal),0) AS reales
-
-  FROM meta
-
-  GROUP BY anho_mes
-
-  ORDER BY anho_mes
-) 
-SELECT *, (metas - reales) AS diferencia 
-FROM ventas;
+SELECT  anhoMes, 
+        sum(valorreal) as ventas, 
+        sum(valormeta) as metas,
+        sum(valormeta) - sum(valorreal) as diferencia
+FROM (
+            SELECT  ROUND(fechameta/100) as anhoMes, 
+                    valorreal,
+                    valormeta
+            FROM meta
+    ) m
+GROUP BY anhoMes
+ORDER BY anhoMes;
