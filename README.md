@@ -8,7 +8,7 @@ Archivo `.sql` final: [query.sql](https://github.com/Achalogy/proj-bases-1/blob/
 
 ## Documentación
 
-Este proyecto fue probado en MariaDB y Oracle Server.
+Este proyecto fue probado en Oracle 19c Server.
 
 ### Creación de tablas
 
