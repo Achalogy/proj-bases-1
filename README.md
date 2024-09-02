@@ -308,5 +308,53 @@ WHERE trabajaen=ccafeterias;
 
 ![alt text](images/ENUN_VIEW_7.png)
 
+Para calcular la cantidad de colaboradores por tipo de contrato (planta y temporales) y por edificio, crearemos una tabla temporal llamada `colabor`. Esta tabla contendrá todos los colaboradores, el edificio en el que han trabajado, la id del colaborador y su tipo de vinculación.
+
+Una vez creada la tabla `colabor`, necesitaremos calcular una columna de totales. Para ello, utilizaremos dos veces nuestra tabla de cantidades. Esta tabla se llamará `cantidades`.
+
+La tabla `cantidades` se generará utilizando un **Full Outer Join** de dos subconsultas de la tabla `colabor`, filtradas por tipo de contrato. Una subconsulta contendrá la cantidad de colaboradores con vinculación de planta y la otra, la cantidad de colaboradores temporales. Utilizaremos la función `COALESCE` para evitar valores nulos al mostrar los resultados, asegurando así que los edificios sin colaboradores de un tipo específico aparezcan con un valor de 0 en lugar de NULL. El **JOIN** se realizará en función del nombre del edificio.
+
+Finalmente, uniremos la tabla `cantidades` con una tabla agregada que se creará a partir de `cantidades`. Esta nueva tabla reemplazará todos los nombres de los edificios por `'TOTALES'` y seleccionará la suma de las columnas `numeroPlanta`, `numeroTemporal` y `Total`.
+
+```sql
+WITH colabor as (
+    SELECT  edificio.id, 
+            edificio.nombre, 
+            idColaborador, 
+            vinculacion
+    FROM    meta, colaborador, edificio, piso, cafeteria
+    WHERE   colaborador.id = meta.idColaborador AND
+            edificio.id = piso.idEdificio AND
+            piso.id = cafeteria.idPiso AND
+            meta.idcafeteria = cafeteria.id
+),
+cantidades as (
+    SELECT  d1.nombre, 
+            COALESCE(numeroPlanta, 0) as numeroPlanta, 
+            COALESCE(numeroTemporal, 0) as numeroTemporal, 
+            COALESCE(numeroPlanta, 0) + COALESCE(numeroTemporal, 0) as Total
+    FROM (
+        SELECT nombre, count(idColaborador) as numeroPlanta
+        FROM colabor
+        WHERE vinculacion = 'PLANTA'
+        GROUP BY nombre
+    ) d1
+    FULL OUTER JOIN (
+        SELECT nombre, count(idColaborador) as numeroTemporal
+        FROM colabor
+        WHERE vinculacion = 'TEMPORAL'
+        GROUP BY nombre
+    ) d2 ON d1.nombre = d2.nombre
+)
+
+SELECT * from cantidades
+UNION (
+    SELECT  'TOTALES' as nombre, 
+            sum(numeroPlanta) as numeroPlanta,
+            sum(numeroTemporal) as numeroTemporal,
+            sum(total) as total
+    from cantidades
+);
+```
 
 ![](images/imagev7.png)
